@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clasificación de Ganado Vacuno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      color: #2d572c;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    label, input, select, button {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    .tabs {
+      margin-top: 30px;
+    }
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .tab-buttons button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #ccc;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .tab-buttons button.active {
+      background-color: #2d572c;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th.sortable:hover {
+      background-color: #ddd;
+      cursor: pointer;
+    }
+    th {
+      background-color: #eee;
+    }
+    .eliminar-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #imprimirBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #3c8dbc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    img.raza-img {
+      max-width: 80px;
+      height: auto;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Banner -->
+<div style="position: relative; text-align: center; margin-bottom: 20px;">
+  <img src="ChatGPT Image 23 sept 2025, 10_04_57.png" alt="Banner de ganado" width="200px" height="200px">
+</div>
+
+<h1>Clasificador de Ganado Vacuno</h1>
+
+<form id="formularioGanado">
+  <label for="raza">Raza del animal:</label>
+  <select id="raza" name="raza" required>
+    <option value="" disabled selected>Seleccione una raza</option>
+    <option value="limangus">Limangus</option>
+    <option value="avileña">Avileña</option>
+    <option value="simmental">Simmental</option>
+    <option value="lechera">Lechera</option>
+    <option value="criollo">Criollo</option>
+    <option value="limousin">Limousin</option>
+    <option value="braford">Braford</option>
+    <option value="brangus">Brangus</option>
+    <option value="brahman">Brahman</option>
+    <option value="hereford">Hereford</option>
+    <option value="angus">Angus</option>
+  </select>
+
+  <label for="campo">Nombre de la estancia o campo (opcional):</label>
+  <input type="text" id="campo" name="campo">
+
+  <label for="peso">Peso del animal (kg):</label>
+  <input type="number" id="peso" name="peso" required min="1">
+
+  <button type="submit">Clasificar</button>
+  <button type="button" id="resetBtn" style="background-color: #d9534f; color: white;">Eliminar todos los datos</button>
+</form>
+
+<h2>Razas de Ganado</h2>
+<table>
+  <tr>
+    <th>Raza</th>
+    <th>Imagen</th>
+  </tr>
+  <tr><td>Lechera</td><td><img src="lechera.jpg" width="250px" height="200px"alt="Lechera"></td></tr>
+  <tr><td>Avileña</td><td><img src="Avileña.jpg" width="250px" height="200px" alt="Avileña"></td></tr>
+  <tr><td>Simmental</td><td><img src="Simmental.webp" width="250px" height="200px" alt="Simmental"></td></tr>
+  <tr><td>Criollo</td><td><img src="criollo.jpg" width="250px" height="200px" alt="Criollo"></td></tr>
+  <tr><td>Limousin</td><td><img src="Limousin.jpg" width="250px" height="200px" alt="Limousin"></td></tr>
+  <tr><td>Braford</td><td><img src="braford.jpg" width="250px" height="200px" alt="Braford"></td></tr>
+  <tr><td>Brangus</td><td><img src="brangus.jpg" width="250px" height="200px" alt="Brangus"></td></tr>
+  <tr><td>Brahman</td><td><img src="Brahman.jpg" width="250px" height="200px" alt="Brahman"></td></tr>
+  <tr><td>Hereford</td><td><img src="hereford.jpg" width="250px" height="200px" alt="Hereford"></td></tr>
+  <tr><td>Angus</td><td><img src="angus.jpg" width="250px" height="200px" alt="Angus"></td></tr>
+  <tr><td>Limangus</td><td><img src="limangus.jpg" width="250px" height="200px" alt="Limangus"></td></tr>
+</table>
+
+<div class="tabs">
+  <div class="tab-buttons">
+    <button class="tab-btn active" data-tab="todos">Todos los Animales</button>
+    <button class="tab-btn" data-tab="lote">Asignados a Lote</button>
+  </div>
+
+  <div id="todos" class="tab-content active">
+    <h2>Lista de Animales Clasificados</h2>
+    <table id="tablaTodos">
+      <thead>
+        <tr>
+          <th class="sortable" data-col="0">Código</th>
+          <th>Raza</th>
+          <th class="sortable" data-col="2">Campo</th>
+          <th class="sortable" data-col="3">Peso (kg)</th>
+          <th>Clasificación</th>
+          <th>Lote</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="lote" class="tab-content">
+    <h2>Animales en el Lote</h2>
+    <table id="tablaLote">
+      <thead>
+        <tr>
+          <th class="sortable" data-col="0">Código</th>
+          <th>Raza</th>
+          <th class="sortable" data-col="2">Campo</th>
+          <th class="sortable" data-col="3">Peso (kg)</th>
+          <th>Clasificación</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Botón imprimir PDF -->
+<button id="imprimirBtn">Imprimir en PDF</button>
+
+<script>
+  const formulario = document.getElementById('formularioGanado');
+  const tablaTodos = document.getElementById('tablaTodos').querySelector('tbody');
+  const tablaLote = document.getElementById('tablaLote').querySelector('tbody');
+  const resetBtn = document.getElementById('resetBtn');
+  let contador = 1;
+
+  function generarCodigoAnimal() {
+    return 'A' + String(contador).padStart(3, '0');
+  }
+
+  formulario.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const raza = document.getElementById('raza').value;
+    const campo = document.getElementById('campo').value.trim() || '—';
+    const peso = parseFloat(document.getElementById('peso').value);
+    const codigo = generarCodigoAnimal();
+    let clasificacion = '';
+    let enLote = false;
+
+    if (peso < 200) {
+      clasificacion = 'Bajo';
+    } else if (peso >= 200 && peso < 350) {
+      clasificacion = 'Medio';
+    } else {
+      clasificacion = 'Buen Pesaje';
+    }
+
+    if (peso > 400) {
+      enLote = true;
+    }
+
+    // Crear fila para tabla principal (sin imagen)
+    const filaTodos = document.createElement('tr');
+    filaTodos.innerHTML = `
+      <td>${codigo}</td>
+      <td>${raza.charAt(0).toUpperCase() + raza.slice(1)}</td>
+      <td>${campo}</td>
+      <td>${peso}</td>
+      <td>${clasificacion}</td>
+      <td>${enLote ? 'Sí' : 'No'}</td>
+      <td><button class="eliminar-btn">Eliminar</button></td>
+    `;
+    tablaTodos.appendChild(filaTodos);
+
+    // Crear fila para lote (sin imagen)
+    if (enLote) {
+      const filaLote = document.createElement('tr');
+      filaLote.innerHTML = `
+        <td>${codigo}</td>
+        <td>${raza.charAt(0).toUpperCase() + raza.slice(1)}</td>
+        <td>${campo}</td>
+        <td>${peso}</td>
+        <td>${clasificacion}</td>
+        <td><button class="eliminar-btn">Eliminar</button></td>
+      `;
+      tablaLote.appendChild(filaLote);
+    }
+
+    contador++;
+    formulario.reset();
+  });
+
+  // Eliminar fila individual
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('eliminar-btn')) {
+      const fila = e.target.closest('tr');
+      fila.remove();
+    }
+  });
+
+  // Resetear todo
+  resetBtn.addEventListener('click', function() {
+    if (confirm('¿Estás seguro de que deseas eliminar todos los datos?')) {
+      tablaTodos.innerHTML = '';
+      tablaLote.innerHTML = '';
+      contador = 1;
+    }
+  });
+
+  // Tabs
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(tab => tab.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(button.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Ordenar columnas
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const colIndex = parseInt(th.dataset.col);
+      const table = th.closest('table');
+      const tbody = table.querySelector('tbody');
+      const filas = Array.from(tbody.querySelectorAll('tr'));
+      const ordenAsc = !th.classList.contains('asc');
+
+      filas.sort((a, b) => {
+        const valA = a.children[colIndex].innerText;
+        const valB = b.children[colIndex].innerText;
+
+        const aNum = parseFloat(valA);
+        const bNum = parseFloat(valB);
+
+        const resultado = isNaN(aNum) || isNaN(bNum)
+          ? valA.localeCompare(valB)
+          : aNum - bNum;
+
+        return ordenAsc ? resultado : -resultado;
+      });
+
+      tbody.innerHTML = '';
+      filas.forEach(fila => tbody.appendChild(fila));
+
+      document.querySelectorAll('th').forEach(th => th.classList.remove('asc', 'desc'));
+      th.classList.add(ordenAsc ? 'asc' : 'desc');
+    });
+  });
+
+  // Imprimir PDF
+  document.getElementById('imprimirBtn').addEventListener('click', function () {
+    window.print();
+  });
+</script>
+</body>
+</html>
